@@ -4,9 +4,6 @@ from pydantic import BaseModel
 from backend.controllers.handlers import Handlers
 from backend.dtos.backend_front import FrontDTO
 
-class ZipRequest(BaseModel):
-    some: str  # Укажите ожидаемые поля
-
 app = FastAPI()
 
 @app.post("/zip")
