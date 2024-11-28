@@ -14,7 +14,7 @@ class ZipPreproc:
     #   filename - имя архива
     def __init__(self, filename):
         self.filename = filename    #Имя файла
-        self.archieve = ZipFile(filename, mode='r') #Архив
+        self.archieve = ZipFile(filename) #Архив
         self.filelist = []  #Список всез файлов
         self.Dict_path = {}
 
@@ -25,13 +25,17 @@ class ZipPreproc:
                 self.filelist.append(list(fname.split('/')))
 
     #Функция для полного заполнения словаря
-    async def __fill_dict(self):
+    async def fill_dict(self):
         for item in self.filelist:   #Заполнение словаря
             await self.__create_dict(list_path=item)
 
     #Функция для красивого вывода многоуровневого словаря
     #   data_json - словарь
     async def display_json(self):
+
+        if self.Dict_path == {}:
+            await self.fill_dict()
+
         pp = pprint.PrettyPrinter(indent=2)
         pp.pprint(self.Dict_path)
 
@@ -40,6 +44,9 @@ class ZipPreproc:
     #Вывод:
     #   множество всевозможных расширений
     async def find_file_types(self):
+
+        if self.Dict_path == {}:
+            await self.fill_dict()
 
         st = set() #возвращаемое множество
 
@@ -79,7 +86,8 @@ class ZipPreproc:
     #   файл json, повторяющий структуру архива
     async def create_json(self, jsonname = 'PreprocData.json'):
 
-        await self.__fill_dict()
+        if self.Dict_path == {}:
+            await self.fill_dict()
 
         with open(jsonname, 'w') as file: #Запись словаря в файл json
             json.dump(self.Dict_path, file)
