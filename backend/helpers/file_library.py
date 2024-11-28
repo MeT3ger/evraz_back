@@ -2,7 +2,7 @@ import pathlib
 from enum import Enum
 
 class Files(Enum):
-    Anubis = '2020.2-Anunbis-develop'
+    anubis = '2020.2-Anunbis-develop'
     backend_master = 'backend-master'
     donna_backend_master = 'donna-backend-master'
     final_year = 'final-year-project-backend-api-master'

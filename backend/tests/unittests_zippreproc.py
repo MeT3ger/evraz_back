@@ -8,7 +8,7 @@ from backend.helpers.file_library import FileLibrary, Files
 class TestZipPreproc(unittest.TestCase):
     
     def setUp(self):
-        self.test_file_1 = ZipPreproc(FileLibrary.get_file_path(Files.Anubis))
+        self.test_file_1 = ZipPreproc(FileLibrary.get_file_path(Files.anubis))
         self.test_file_2 = ZipPreproc(FileLibrary.get_file_path(Files.backend_master))
         self.test_file_3 = ZipPreproc(FileLibrary.get_file_path(Files.donna_backend_master))
         self.test_file_4 = ZipPreproc(FileLibrary.get_file_path(Files.final_year))
@@ -25,7 +25,7 @@ class TestZipPreproc(unittest.TestCase):
         
         #1 Тест с Anunbis-develop.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=FileLibrary.get_json_path(Files.Anubis)))
+            asyncio.run(self.test_file_1.create_json(jsonname=FileLibrary.get_json_path(Files.anubis)))
         except Exception as e:
             self.fail(msg=f'Failed on Anunbis-develop.zip with {e}')
 
