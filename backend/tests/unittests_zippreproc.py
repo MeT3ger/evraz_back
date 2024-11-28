@@ -1,95 +1,97 @@
 import unittest
 import asyncio
+
 from backend.controllers.zip_preproc import ZipPreproc
+from backend.helpers.file_library import FileLibrary, Files
 
 #Тест работоспособности класса
 class TestZipPreproc(unittest.TestCase):
-
+    
     def setUp(self):
-        self.test_file_1 = ZipPreproc(r'python\2020.2-Anunbis-develop.zip')
-        self.test_file_2 = ZipPreproc(r'python\backend-master.zip')
-        self.test_file_3 = ZipPreproc(r'python\donna-backend-master.zip')
-        self.test_file_4 = ZipPreproc(r'python\final-year-project-backend-api-master.zip')
-        self.test_file_5 = ZipPreproc(r'python\Flask-PostgreSQL-API-Seed-master.zip')
-        self.test_file_6 = ZipPreproc(r'python\FlaskApiEcommerce-master.zip')
-        self.test_file_7 = ZipPreproc(r'python\gramps-web-api-master.zip')
-        self.test_file_8 = ZipPreproc(r'python\hackernews-api-main.zip')
-        self.test_file_9 = ZipPreproc(r'python\http-api-3.1.zip')
-        self.test_file_10 = ZipPreproc(r'python\luncher-api-master.zip')
-        self.test_file_11 = ZipPreproc(r'python\ml-flask-api-master.zip')
-        self.test_file_12 = ZipPreproc(r'python\RESTfulAPI-master 2.zip')
+        self.test_file_1 = ZipPreproc(FileLibrary.get_file_path(Files.Anubis))
+        self.test_file_2 = ZipPreproc(FileLibrary.get_file_path(Files.backend_master))
+        self.test_file_3 = ZipPreproc(FileLibrary.get_file_path(Files.donna_backend_master))
+        self.test_file_4 = ZipPreproc(FileLibrary.get_file_path(Files.final_year))
+        self.test_file_5 = ZipPreproc(FileLibrary.get_file_path(Files.flask_postgres))
+        self.test_file_6 = ZipPreproc(FileLibrary.get_file_path(Files.flask_api))
+        self.test_file_7 = ZipPreproc(FileLibrary.get_file_path(Files.gramps_api))
+        self.test_file_8 = ZipPreproc(FileLibrary.get_file_path(Files.hacker_api))
+        self.test_file_9 = ZipPreproc(FileLibrary.get_file_path(Files.http_api))
+        self.test_file_10 = ZipPreproc(FileLibrary.get_file_path(Files.launcher_api))
+        self.test_file_11 = ZipPreproc(FileLibrary.get_file_path(Files.ml_flask_api))
+        self.test_file_12 = ZipPreproc(FileLibrary.get_file_path(Files.rest_api))
     
     def test_create_json(self):
         
         #1 Тест с Anunbis-develop.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\Anunbis-develop.json'))
+            asyncio.run(self.test_file_1.create_json(jsonname=FileLibrary.get_json_path(Files.Anubis)))
         except Exception as e:
             self.fail(msg=f'Failed on Anunbis-develop.zip with {e}')
 
         #2 Тест с backend-master.zip
         try:   
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\backend-master.json'))
+            asyncio.run(self.test_file_2.create_json(jsonname=FileLibrary.get_json_path(Files.backend_master)))
         except Exception as e:
             self.fail(msg=f'Failed on backend-master.zip with {e}')
         
         #3 Тест с donna-backend-master.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\donna-backend-master.json'))
+            asyncio.run(self.test_file_3.create_json(jsonname=FileLibrary.get_json_path(Files.donna_backend_master)))
         except Exception as e:
             self.fail(msg=f'Failed on donna-backend-master.zip with {e}')
         
         #4 Тест с final-year-project-backend-api-master.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\final-year-project-backend-api-master.json'))
+            asyncio.run(self.test_file_4.create_json(jsonname=FileLibrary.get_json_path(Files.final_year)))
         except Exception as e:
             self.fail(msg=f'Failed on final-year-project-backend-api-master.zip with {e}')
         
         #5 Тест с Flask-PostgreSQL-API-Seed-master.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\Flask-PostgreSQL-API-Seed-master.json'))
+            asyncio.run(self.test_file_5.create_json(jsonname=FileLibrary.get_json_path(Files.flask_postgres)))
         except Exception as e:
             self.fail(msg=f'Failed on Flask-PostgreSQL-API-Seed-master.zip with {e}')
         
         #6 Тест с FlaskApiEcommerce-master.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\FlaskApiEcommerce-master.json'))
+            asyncio.run(self.test_file_6.create_json(jsonname=FileLibrary.get_json_path(Files.flask_api)))
         except Exception as e:
             self.fail(msg=f'Failed on Flask-PostgreSQL-API-Seed-master.zip with {e}')
         
         #7 Тест с gramps-web-api-master.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\gramps-web-api-master.json'))
+            asyncio.run(self.test_file_7.create_json(jsonname=FileLibrary.get_json_path(Files.gramps_api)))
         except Exception as e:
             self.fail(msg=f'Failed on gramps-web-api-master.zip with {e}')
         
         #8 Тест с hackernews-api-main.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\hackernews-api-main.json'))
+            asyncio.run(self.test_file_8.create_json(jsonname=FileLibrary.get_json_path(Files.hacker_api)))
         except Exception as e:
             self.fail(msg=f'Failed on hackernews-api-main.zip with {e}')
         
-        #9 Тест с http-api.zip
+        # 9 Тест с http-api.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\http-api.json'))
+            asyncio.run(self.test_file_9.create_json(jsonname=FileLibrary.get_json_path(Files.http_api)))
         except Exception as e:
             self.fail(msg=f'Failed on http-api.zip with {e}')
         
         #10 Тест с luncher-api-master.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\luncher-api-master.json'))
+            asyncio.run(self.test_file_10.create_json(jsonname=FileLibrary.get_json_path(Files.launcher_api)))
         except Exception as e:
             self.fail(msg=f'Failed on luncher-api-master.zip with {e}')
         
         #11 Тест с ml-flask-api-master.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\ml-flask-api-master.json'))
+            asyncio.run(self.test_file_11.create_json(jsonname=FileLibrary.get_json_path(Files.ml_flask_api)))
         except Exception as e:
             self.fail(msg=f'Failed on ml-flask-api-master.zip with {e}')
 
         #12 Тест с RESTfulAPI-master.zip
         try:
-            asyncio.run(self.test_file_1.create_json(jsonname=r'data_jsons\RESTfulAPI-master 2.json'))
+            asyncio.run(self.test_file_12.create_json(jsonname=FileLibrary.get_json_path(Files.rest_api)))
         except Exception as e:
             self.fail(msg=f'Failed on RESTfulAPI-master {e}')
     

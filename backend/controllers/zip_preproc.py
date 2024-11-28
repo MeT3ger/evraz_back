@@ -1,7 +1,6 @@
 from zipfile import ZipFile
 import json
 import pprint
-import asyncio
 
 #Класс для работы с запакованным архивом
 #Атрибуты класса:
