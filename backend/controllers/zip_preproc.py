@@ -1,6 +1,7 @@
 from zipfile import ZipFile
 import json
 import pprint
+import asyncio
 
 #Класс для работы с запакованным архивом
 #Атрибуты класса:
@@ -23,13 +24,15 @@ class ZipPreproc:
 
             if fname[-1] != '/' and not('MACOSX' in fname) :
                 self.filelist.append(list(fname.split('/')))
-        
+
+    #Функция для полного заполнения словаря
+    async def __fill_dict(self):
         for item in self.filelist:   #Заполнение словаря
-            self.__create_dict(list_path=item)
+            await self.__create_dict(list_path=item)
 
     #Функция для красивого вывода многоуровневого словаря
     #   data_json - словарь
-    def display_json(self):
+    async def display_json(self):
         pp = pprint.PrettyPrinter(indent=2)
         pp.pprint(self.Dict_path)
 
@@ -37,7 +40,7 @@ class ZipPreproc:
     #   filelist - список, содержащий имена файлов
     #Вывод:
     #   множество всевозможных расширений
-    def find_file_types(self):
+    async def find_file_types(self):
 
         st = set() #возвращаемое множество
 
@@ -53,12 +56,12 @@ class ZipPreproc:
     #   indx - индекс начального элемента
     #Вывод:
     #   словарь со структурой, повторяющей путь файла
-    def __create_dict(self, list_path, indx = 0):
+    async def __create_dict(self, list_path, indx = 0):
 
         if indx < len(list_path) - 1:   #Если не дошли до самого файла, то углубляемся в следующую директорию
             if not(list_path[indx] in self.Dict_path.keys()):
                 self.Dict_path[list_path[indx]] = {}
-            return self.__create_dict(list_path, indx+1)
+            return await self.__create_dict(list_path, indx+1)
         else:                           #Если дошли, то считываем файл в string. Игнорируем картинки png и все файлы из директории MAKOSX
             names = self.archieve.namelist()
             for name in names:
@@ -75,17 +78,15 @@ class ZipPreproc:
     #   jsonname - имя json, в который будет сохраняться инфорация (если существует, то старая информация на нем будет стерта). По умолчанию 'PreprocData.json'
     #Результат работы:
     #   файл json, повторяющий структуру архива
-    def create_json(self, jsonname = 'PreprocData.json'):
+    async def create_json(self, jsonname = 'PreprocData.json'):
+
+        await self.__fill_dict()
 
         with open(jsonname, 'w') as file: #Запись словаря в файл json
             json.dump(self.Dict_path, file)
+        
+        return True
 
 
     def __del__(self):
         self.archieve.close()
-
-if __name__ =='__main__':
-    filename = r'python\RESTfulAPI-master 2.zip'
-    fil = ZipPreproc(filename)
-    st = fil.find_file_types()
-    print(st)
