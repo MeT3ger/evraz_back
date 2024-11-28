@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from backend.controllers.controller import Controller
+from backend.controllers.handlers import Handlers
 from backend.dtos.backend_front import FrontDTO
 
 app = FastAPI()
@@ -12,7 +12,7 @@ async def zip(data):
     zip = FrontDTO.Requests.zip(data)
     
     # validate data +  zipParse + processing + go to mistral + return response
-    response_corrections = await Controller.code_style_fix(zip)
+    response_corrections = await Handlers.code_style_fix(zip)
     
     dto = FrontDTO.Responses.zip(response_corrections)
     return dto

@@ -1,4 +1,4 @@
-class Controller:
+class Handlers:
     
     # я от балды долбанул лишь бы интерфейс был
     async def code_style_fix(data):
