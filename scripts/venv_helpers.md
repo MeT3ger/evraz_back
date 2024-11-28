@@ -5,6 +5,8 @@
 # init .venv (Mac/Linux) / Windows (?)
 python3 -m venv .venv
 
+Windows: python -m venv .venv
+
 # activate .venv (Mac/Linux) / Windows (?)
 source venv/bin/activate
 
