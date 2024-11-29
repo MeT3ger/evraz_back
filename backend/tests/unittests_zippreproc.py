@@ -1,7 +1,7 @@
 import unittest
 import asyncio
 
-from backend.controllers.zip_preproc import ZipPreproc
+from backend.parsers.zip_preproc import ZipPreproc
 from backend.helpers.file_library import FileLibrary, Files
 
 #Тест работоспособности класса

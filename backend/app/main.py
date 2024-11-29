@@ -1,10 +1,8 @@
 from fastapi import FastAPI, File, UploadFile, HTTPException
 from pydantic import BaseModel
 import os
-from backend.controllers.zip_preproc import ZipPreproc
+from backend.parsers.zip_preproc import ZipPreproc
 
-#from backend.controllers.handlers import Handlers
-#from backend.dtos.backend_front import FrontDTO
 from io import BytesIO
 
 app = FastAPI()
