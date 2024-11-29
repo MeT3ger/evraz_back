@@ -44,7 +44,7 @@ class ZipPreproc:
     #   filelist - список, содержащий имена файлов
     #Вывод:
     #   множество всевозможных расширений
-    async def find_file_types(self):
+    async def __find_file_types(self):
 
         if self.Dict_path == {}:
             await self.fill_dict()
@@ -80,12 +80,12 @@ class ZipPreproc:
                             self.Dict_path[list_path[indx]] ='some image'
             return self.Dict_path
 
-    #Функция создания json непосредственно из архива zip
+    #Функция создания файла json непосредственно из архива zip
     #   filename - имя архива
     #   jsonname - имя json, в который будет сохраняться инфорация (если существует, то старая информация на нем будет стерта). По умолчанию 'PreprocData.json'
     #Результат работы:
     #   файл json, повторяющий структуру архива
-    async def create_json(self, jsonname = 'PreprocData.json'):
+    async def dump_json(self, jsonname = 'PreprocData.json'):
 
         if self.Dict_path == {}:
             await self.fill_dict()
