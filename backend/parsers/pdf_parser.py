@@ -11,9 +11,9 @@ class LoadPDF:
     #   filepath - путь до файла
     #Выходные данные:
     #   list[langchain_core.documents.Document] - список, содержащий данные о документе
-    async def load_pdf(self, filepath):
+    def load_pdf(self, filepath):
         loader = PDFPlumberLoader(
             file_path=filepath,
-            extract_images=True
+            extract_images=False
         )
         return loader.load()
