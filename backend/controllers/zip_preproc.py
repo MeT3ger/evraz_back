@@ -28,6 +28,7 @@ class ZipPreproc:
     async def fill_dict(self):
         for item in self.filelist:   #Заполнение словаря
             await self.__create_dict(list_path=item)
+        return self.Dict_path
 
     #Функция для красивого вывода многоуровневого словаря
     #   data_json - словарь
