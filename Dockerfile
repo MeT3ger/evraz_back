@@ -8,7 +8,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 COPY . .
 
-WORKDIR /app/backend
+WORKDIR /app
 
 EXPOSE 8080
 
