@@ -1,18 +1,19 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, File, UploadFile, HTTPException
+from backend.parsers.zip_preproc import ZipPreproc
 
-from backend.controllers.handlers import Handlers
-from backend.dtos.backend_front import FrontDTO
+from io import BytesIO
 
 app = FastAPI()
 
-@app.get("/zip")
-async def zip(data):
-    # buisness skinny logic
+@app.post("/zip")
+async def zip(file: UploadFile = File(alias="some")):
+
+    if file.content_type != "application/zip":
+        raise HTTPException(status_code=400, detail="Uploaded file is not a ZIP archive.")
     
-    zip = FrontDTO.Requests.zip(data)
-    
-    # validate data +  zipParse + processing + go to mistral + return response
-    response_corrections = await Handlers.code_style_fix(zip)
-    
-    dto = FrontDTO.Responses.zip(response_corrections)
-    return dto
+    file_content = await file.read()
+
+    zip_arc = ZipPreproc(BytesIO(file_content))
+    archieve = await zip_arc.fill_dict()
+
+    return {"message": "zip"}
