@@ -6,7 +6,7 @@ import shutil
 
 class CreatePDF:
     
-    async def create_v2(json):
+    async def create(json):
         pdf_buffer = io.BytesIO()
         string = json['choices'][0]['message']['content']
         document = ap.Document()
