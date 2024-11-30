@@ -4,21 +4,19 @@ import io
 import asyncio
 
 class CreatePDF:
-    async def create(jsn):
+    async def create(json):
         pdf_buffer = io.BytesIO()
         canv = canvas.Canvas(pdf_buffer, pagesize=letter)
-        strin = jsn['choices'][0]['message']['content'].split('\n')
+        string = json['choices'][0]['message']['content'].split('\n')
         x = 100
         y = 750
-        for line in strin:
+        for line in string:
             canv.drawString(x, y, line)
             y -= 15
-        
         canv.save()
         pdf_buffer.seek(0)
+        
         return pdf_buffer
-    
-
 '''
 Пересылать будем примерно так:
 pdf_name = 'document.pdf'
