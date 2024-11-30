@@ -1,5 +1,5 @@
 import requests
-from backend.app.adapters.params import LLM_Params
+from backend.app.adapters.llm.params import LLM_Params
 from data.consts.instruct import Instructions
 
 class LLM_Exchange:
