@@ -6,6 +6,8 @@ async def code_review(file: ZipFile):
     # возможно стоит добавить функцию которая отвечает на вопрос это проект или файл (???)
     user_project_struct = await file.project_struct()
 
+    project_type = file.get_project_type()  #Тип проекта
+
     nearests_prompts = "some" # ! vladimir adapter !
     
     # надо понять на каком слое выбирать Instructions

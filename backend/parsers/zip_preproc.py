@@ -46,7 +46,7 @@ class ZipPreproc:
     #   filelist - список, содержащий имена файлов
     #Вывод:
     #   множество всевозможных расширений
-    async def __find_file_types(self):
+    async def find_file_types(self):
 
         if self.Dict_path == {}:
             await self.fill_dict()
