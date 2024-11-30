@@ -1,29 +1,24 @@
-from backend.app.adapters.faiss.create_db_for_code import FAISSManager
-from backend.app.adapters.faiss.create_db_for_structures import FAISSManager_structure
-import os
+from backend.app.adapters.faiss.helpers.create_db_for_code import FAISS_File_Search
+from backend.app.adapters.faiss.helpers.create_db_for_structures import FAISS_Structure_Search
+
+File_Search = FAISS_File_Search()
+Project_Search = FAISS_Structure_Search()
 
 class FAISS_Exchange:
+    class Extract_Similar_Codes:
+        async def file(query, k):
+            results = await File_Search.similarity_search(query)
 
-    async def extract_k_most_similar_codes(query, k):
-    
-        faiss_manager = FAISSManager()
-        faiss_manager.load_index()
-        results = await faiss_manager.similarity_search(query)
-
-        if results:
-            top_results = results[:k]
-            combined_content = "\n\n".join(
-             [result.page_content for result in top_results]
-            )  
-            return combined_content
-        else:
-            return "Результат не найден"
-        
-    async def extract_k_most_similar_structures(query, k):
-        faiss_manager = FAISSManager_structure()
-        faiss_manager.load_index()
-        results = faiss_manager.search(query, k)
-        output = "\n".join(results)
-        return output
- 
- 
+            if results:
+                top_results = results[:k]
+                combined_content = "\n\n".join(
+                    [result.page_content for result in top_results]
+                )  
+                return combined_content
+            else:
+                return ""
+            
+        async def project(query, k):
+            results = await Project_Search.similary_search(query, k)
+            output = "\n".join(results)
+            return output
