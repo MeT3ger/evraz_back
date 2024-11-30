@@ -2,7 +2,7 @@ import unittest
 import asyncio
 
 from backend.parsers.zip_preproc import ZipPreproc
-from backend.helpers.file_library import FileLibrary, Files
+from backend.db.file_library import FileLibrary, Files
 
 #Тест работоспособности класса
 class TestZipPreproc(unittest.TestCase):
@@ -95,7 +95,7 @@ class TestZipPreproc(unittest.TestCase):
         except Exception as e:
             self.fail(msg=f'Failed on RESTfulAPI-master {e}')
             
-'''            
+       
     def test_find_file_types(self):
 
         #1 Тест с Anunbis-develop.zip
@@ -179,7 +179,6 @@ class TestZipPreproc(unittest.TestCase):
         res_func = asyncio.run(self.test_file_12._ZipPreproc__find_file_types())
         res_true = set(['py', 'md', 'iml', 'xml', 'gitignore'])
         self.assertTrue(res_func == res_true, msg='Fail with RESTfulAPI-master.zip')
-'''
 
 if __name__ == "__main__":
     unittest.main()

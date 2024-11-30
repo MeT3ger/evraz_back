@@ -1,6 +1,5 @@
 import pathlib
 from enum import Enum
-import json
 
 class Files(Enum):
     anubis = '2020.2-Anunbis-develop'
@@ -23,17 +22,3 @@ class FileLibrary:
     
     def get_json_path(filename: Files):
         return pathlib.Path('data', 'data_jsons', filename.value + '.json')
-    
-class GetDataBase:
-
-    def get_db():
-        jsons = ''
-        
-        for file in Files:
-            with open(FileLibrary.get_json_path(file), 'r') as file:
-                data = json.load(file)
-                jsons = jsons + '\n' + str(data)
-                
-        return jsons
-        
-print(GetDataBase.get_db())
