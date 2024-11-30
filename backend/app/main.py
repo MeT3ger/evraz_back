@@ -9,7 +9,8 @@ app = FastAPI()
 pdfLoader = LoadPDF()
 instruct_pdf = pdfLoader.load_pdf('data\Instruct.pdf')
 print('Instruct loaded')
-projects_dataset = 'Тут должны быть проекты, но пока их нет'
+projects_dataset = ''
+
 print('Datasets loaded')
 
 @app.post("/zip")
