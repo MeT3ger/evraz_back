@@ -9,16 +9,16 @@ from langchain.vectorstores import FAISS
 
 
 class FAISS_Structure_Search:
-    def __init__(self, faiss_manager: FAISS_Structure_Manager = FAISS_Structure_Manager()):
-        self.manager = faiss_manager
+    def __init__(self):
+        self.manager = FAISS_Structure_Manager()
         
-    def similary_search(self, query: str, k=10):
-        self.manager.similarity_search(query=query, k=k)
+    async def similary_search(self, query: str, k=10):
+        return self.manager.similarity_search(query=query, k=k)
 
 class FAISS_Structure_Manager:
 
     def similarity_search(self, query: str, k: int = 5) -> List[str]:
-        query_embedding = self._embedding_fn(query)
+        query_embedding = self.__embedding_fn(query)
         results = self.faiss_store.similarity_search_by_vector(query_embedding, k)
         return [result.page_content for result in results]
         

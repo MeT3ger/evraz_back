@@ -12,11 +12,11 @@ import os
 import faiss
 
 class FAISS_File_Search:
-    def __init__(self, faiss_manager: FAISS_File_Manager = FAISS_File_Manager()):
-        self.FAISS_MANAGER = faiss_manager
+    def __init__(self):
+        self.manager = FAISS_File_Manager()
         
-    def similary_search(self, query: str, k=10):
-        FAISS_Manager.similarity_search(query=query, k=k)
+    async def similary_search(self, query: str, k=10):
+        return self.manager.similarity_search(query=query, k=k)
 
 class FAISS_File_Manager:
     
