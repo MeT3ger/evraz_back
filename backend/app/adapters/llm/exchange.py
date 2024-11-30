@@ -4,7 +4,7 @@ from data.consts.instruct import Instructions
 
 class LLM_Exchange:
 
-    def mistral(file: str, file_type: Instructions, top_similarity_framgents: str, headers = {}, http_addr = ''):
+    async def mistral(file: str, file_type: Instructions, top_similarity_framgents: str, headers = {}, http_addr = ''):
         if headers == {}:
             headers = LLM_Params.headers
         

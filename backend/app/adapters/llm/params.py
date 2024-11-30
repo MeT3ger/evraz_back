@@ -22,6 +22,7 @@ class LLM_Params:
     http_addr = 'http://84.201.152.196:8020/v1/completions'
     
     def body(user_file: str, instruction: Instructions, most_similary: str):
+        print(user_file)
         return {
             'model': 'mistral-nemo-instruct-2407',
             'messages' : [ 
