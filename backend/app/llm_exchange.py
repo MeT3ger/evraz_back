@@ -1,35 +1,31 @@
 import requests
+import json
 
 class LLM_Connector:
 
     def __init__(self):
         self.prompt = {}
     
-    async def create_prompt(self, user_content, database_content, instruct_content, system_text_prompt = ''):
-        if system_text_prompt == '':
-            sysyem_text_prompt = '''Ты говорящий на русском языке помощник программиста, 
-                                который отвечает за проверку структуры отправляемых тебе проектов,
-                                данных тебе ввиде структуры json.
-                                Используй данную ниже инструкцию, а также примеры уже проверенных 
-                                и верно организованных проектов, и подробно опиши все несоответствия, которые найдешь'''
-        
+    async def create_prompt(self, user_content, database_content, instruct_content):
+        sysyem_text_prompt = '''Ты говорящий на русском языке помощник программиста, 
+                            который отвечает за проверку структуры отправляемых тебе проектов,
+                            данных тебе ввиде объекта json.
+                            '''
+
+        user_text_prompt = '''Ниже дан проект в виде структуры json. 
+                                Проверь его на соответствие требованиям по оформлению.
+                                Используй данную инструкцию и подробно опиши все несоответствия, которые найдешь.
+                        '''
         self.prompt = {'model': 'mistral-nemo-instruct-2407',
                        'messages' : [ 
                            {
                                 'role': 'system',
-                                'content': sysyem_text_prompt
-                            },
-                            {
-                                'role': 'system',
+                                #'content': sysyem_text_prompt + '\n\n' + instruct_content
                                 'content': instruct_content
                             },
                             {
-                                'role': 'system',
-                                'content': database_content
-                            },
-                            {
                                 'role': 'user',
-                                'content': user_content
+                                'content': user_text_prompt + '\n\n' + str(user_content)
                             },
                            
                         ],
@@ -47,8 +43,8 @@ class LLM_Connector:
         
         if http_addr == '':
             http_addr = 'http://84.201.152.196:8020/v1/completions'
-        
+
         response = requests.post(http_addr, headers=headers, json=self.prompt)
         answer = response.json()
 
-        return answer['choices'][0]['message']
+        return answer

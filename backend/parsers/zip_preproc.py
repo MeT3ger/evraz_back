@@ -1,6 +1,7 @@
 from zipfile import ZipFile
 import json
 import pprint
+import asyncio
 
 #Класс для работы с запакованным архивом
 #Атрибуты класса:
@@ -21,13 +22,15 @@ class ZipPreproc:
         for item in self.archieve.infolist():    #Создание списка со всеми файлами, кроме тех, что находятся в директории 'MACOSX'
             fname = item.filename
 
-            if fname[-1] != '/' and not('MACOSX' in fname) :
+            if fname[-1] != '/' and not('MACOSX' in fname):
                 self.filelist.append(list(fname.split('/')))
 
     #Функция для полного заполнения словаря
     async def fill_dict(self):
+        dict_arc = {}
         for item in self.filelist:   #Заполнение словаря
-            await self.__create_dict(list_path=item)
+            self.__create_dict(dict_arc, list_path=item)
+        self.Dict_path = dict_arc
         return self.Dict_path
 
     #Функция для красивого вывода многоуровневого словаря
@@ -63,22 +66,15 @@ class ZipPreproc:
     #   indx - индекс начального элемента
     #Вывод:
     #   словарь со структурой, повторяющей путь файла
-    async def __create_dict(self, list_path, indx = 0):
+    def __create_dict(self, dict_arc, list_path, indx = 0):
 
         if indx < len(list_path) - 1:   #Если не дошли до самого файла, то углубляемся в следующую директорию
-            if not(list_path[indx] in self.Dict_path.keys()):
-                self.Dict_path[list_path[indx]] = {}
-            return await self.__create_dict(list_path, indx+1)
-        else:                           #Если дошли, то считываем файл в string. Игнорируем картинки png и все файлы из директории MAKOSX
-            names = self.archieve.namelist()
-            for name in names:
-                if name.endswith(list_path[indx]) and not('MACOSX' in name):
-                    with self.archieve.open(name, 'r') as file:
-                        if not name.endswith('png'):
-                            self.Dict_path[list_path[indx]] = file.read().decode('utf-8', errors='ignore')
-                        else:
-                            self.Dict_path[list_path[indx]] ='some image'
-            return self.Dict_path
+            if not(list_path[indx] in dict_arc.keys()):
+                dict_arc[list_path[indx]] = {}
+            return self.__create_dict(dict_arc[list_path[indx]], list_path, indx+1)
+        else:            
+            dict_arc[list_path[indx]] = ''
+            return dict_arc
 
     #Функция создания файла json непосредственно из архива zip
     #   filename - имя архива

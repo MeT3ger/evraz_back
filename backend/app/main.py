@@ -7,8 +7,10 @@ from io import BytesIO
 
 app = FastAPI()
 pdfLoader = LoadPDF()
-instruct_pdf = pdfLoader.load_pdf()
+instruct_pdf = pdfLoader.load_pdf('data\Instruct.pdf')
+print('Instruct loaded')
 projects_dataset = 'Тут должны быть проекты, но пока их нет'
+print('Datasets loaded')
 
 @app.post("/zip")
 async def zip(file: UploadFile = File(alias="some")):
@@ -22,8 +24,10 @@ async def zip(file: UploadFile = File(alias="some")):
     zip_arc = ZipPreproc(BytesIO(file_content))
     archieve = await zip_arc.fill_dict()
     print('User data got')
+    await zip_arc.display_json()
 
     llm_preproc = LLM_Connector()
+    global instruct_pdf, projects_dataset
     await llm_preproc.create_prompt(user_content=archieve, 
                               database_content=projects_dataset,
                               instruct_content=instruct_pdf)

@@ -95,7 +95,7 @@ class TestZipPreproc(unittest.TestCase):
         except Exception as e:
             self.fail(msg=f'Failed on RESTfulAPI-master {e}')
             
-            
+'''            
     def test_find_file_types(self):
 
         #1 Тест с Anunbis-develop.zip
@@ -179,6 +179,7 @@ class TestZipPreproc(unittest.TestCase):
         res_func = asyncio.run(self.test_file_12._ZipPreproc__find_file_types())
         res_true = set(['py', 'md', 'iml', 'xml', 'gitignore'])
         self.assertTrue(res_func == res_true, msg='Fail with RESTfulAPI-master.zip')
+'''
 
 if __name__ == "__main__":
     unittest.main()

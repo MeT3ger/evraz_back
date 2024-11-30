@@ -21,4 +21,4 @@ class FileLibrary:
         return pathlib.Path('data', 'python', filename.value + '.zip')
     
     def get_json_path(filename: Files):
-        return pathlib.Path('data', 'python', filename.value + '.json')
+        return pathlib.Path('data', 'data_jsons', filename.value + '.json')
