@@ -1,7 +1,9 @@
 from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.responses import StreamingResponse
 
 from backend.app.controllers.code_review import code_review
 from backend.extensions.ZipFile import ZipFile
+from backend.app.controllers.return_pdf import CreatePDF
 
 app = FastAPI()
 
@@ -18,6 +20,10 @@ async def zip_code_review(file: UploadFile = File(alias="some")):
     
     refactored_code = await code_review(zip)
     
-    # dto = PDF_dto.json(refactored_code)
+    pdf = await CreatePDF.create(refactored_code)
     
-    return refactored_code # dto
+    return StreamingResponse(
+        pdf, 
+        media_type='application/pdf', 
+        headers={"Content-Disposition": "attachment; filename=document.pdf"}
+    )
