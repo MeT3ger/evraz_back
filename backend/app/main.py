@@ -1,19 +1,23 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException
-from backend.parsers.zip_preproc import ZipPreproc
+from fastapi import FastAPI, File, HTTPException, UploadFile
 
-from io import BytesIO
+from backend.app.controllers.code_review import code_review
+from backend.extensions.ZipFile import ZipFile
 
 app = FastAPI()
 
-@app.post("/zip")
-async def zip(file: UploadFile = File(alias="some")):
+@app.post("/foo")
+async def foo():
+    return {"message": "Hello, World!"}
 
+
+@app.post("/zip")
+async def zip_code_review(file: UploadFile = File(alias="some")):
     if file.content_type != "application/zip":
         raise HTTPException(status_code=400, detail="Uploaded file is not a ZIP archive.")
+    zip = ZipFile(file)
     
-    file_content = await file.read()
-
-    zip_arc = ZipPreproc(BytesIO(file_content))
-    archieve = await zip_arc.fill_dict()
-
-    return {"message": "zip"}
+    refactored_code = await code_review(zip)
+    
+    # dto = PDF_dto.json(refactored_code)
+    
+    return refactored_code # dto

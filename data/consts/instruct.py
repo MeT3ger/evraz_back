@@ -1,4 +1,6 @@
-class Instructions:
+from enum import Enum
+
+class Instructions(Enum):
     project_struct = '''
     Требования по оформлению Python-проекта:
     demo_project
