@@ -66,7 +66,7 @@ class ZipPreproc:
     #   indx - индекс начального элемента
     #Вывод:
     #   словарь со структурой, повторяющей путь файла
-    def __create_dict(self, dict_arc, list_path, indx = 0):
+    def __create_dict(self, dict_arc, list_path, indx = 1):
 
         if indx < len(list_path) - 1:   #Если не дошли до самого файла, то углубляемся в следующую директорию
             if not(list_path[indx] in dict_arc.keys()):

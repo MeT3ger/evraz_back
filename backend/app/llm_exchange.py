@@ -9,19 +9,19 @@ class LLM_Connector:
     async def create_prompt(self, user_content, database_content, instruct_content):
         sysyem_text_prompt = '''Ты говорящий на русском языке помощник программиста, 
                             который отвечает за проверку структуры отправляемых тебе проектов,
-                            данных тебе ввиде объекта json.
+                            данных тебе ввиде объекта json. Требования представлены ниже.
                             '''
 
-        user_text_prompt = '''Ниже дан проект в виде структуры json. 
+        user_text_prompt = '''Ниже дан проект в виде структуры json, повторяющий структуру проекта. Он может быть вложенный. 
                                 Проверь его на соответствие требованиям по оформлению.
-                                Используй данную инструкцию и подробно опиши все несоответствия, которые найдешь.
+                                Используй данную тебе  инструкцию и подробно опиши все несоответствия, которые найдешь.
                         '''
         self.prompt = {'model': 'mistral-nemo-instruct-2407',
                        'messages' : [ 
                            {
                                 'role': 'system',
-                                #'content': sysyem_text_prompt + '\n\n' + instruct_content
-                                'content': instruct_content
+                                #'content': instruct_content + '\nНиже приведены примеры проектов, удовлетворяющих требованиям \n' + database_content
+                                'content': sysyem_text_prompt + '\n\n' + instruct_content
                             },
                             {
                                 'role': 'user',
