@@ -1,0 +1,5 @@
+#Gitignore file
+__pycache__/
+.venv/
+/python/
+data/python/*.json
