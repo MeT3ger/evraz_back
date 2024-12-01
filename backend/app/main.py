@@ -19,9 +19,7 @@ async def zip_code_review(type: Language = Header(), file: UploadFile = File(ali
         raise HTTPException(status_code=400, detail="Uploaded file is not a ZIP archive.")
     zip = ZipFile(file)
     
-    
     refactored_code = await code_review_zip(zip, Language.python) # TODO:
-        
     
     pdf = CreatePDF.create(refactored_code) 
 
@@ -33,15 +31,15 @@ async def zip_code_review(type: Language = Header(), file: UploadFile = File(ali
     
 @app.post("/file")
 async def zip_code_review(type: Language = Header(), file: UploadFile = File(alias="some")):
-    file_income = file.file.read()
 
-    # if file.filename.endswith('.py'):
-    #     answer = python_review(file_income)
-    # elif file.filename.endswith('.cs'):
-    #     answer = csharp_review(file_income)
-    # elif file.filename.endswith('.ts'):
-    #     answer = typescript_review(file_income)clear
+    refactored_code = await code_review_file(file, type)
 
-    # answ_pdf = await CreatePDF.create(answer)
+    print(refactored_code)
 
-    return { "type": type }
+    pdf = CreatePDF.create(refactored_code)
+
+    return StreamingResponse(
+        pdf, 
+        media_type='application/pdf; charset=UTF-8"', 
+        headers={"Content-Disposition": "attachment; filename=document.pdf"}
+    )
