@@ -71,8 +71,9 @@ class ZipPreproc:
             if not(list_path[indx] in dict_arc.keys()):
                 dict_arc[list_path[indx]] = {}
             return self.__create_dict(dict_arc[list_path[indx]], list_path, indx+1)
-        else:            
-            dict_arc[list_path[indx]] = ''
+        else:    
+            dict_arc[list_path[indx]] = ''        
+            #dict_arc[list_path[indx]] = ''
             return dict_arc
 
     #Функция создания файла json непосредственно из архива zip
