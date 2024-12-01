@@ -10,5 +10,5 @@ class ZipFile:
     async def project_struct(self) -> str:
         file_content = await self.file.read()
         zip_arc = ZipPreproc(BytesIO(file_content))
-        archieve = await zip_arc.fill_dict()
+        archieve = await zip_arc.get_files()
         return archieve

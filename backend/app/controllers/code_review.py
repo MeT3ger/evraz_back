@@ -14,30 +14,49 @@ async def code_review_zip(zip: ZipFile, languague: Language):
         10
     )
     
-    print(nearests_prompts)
+    #print(nearests_prompts)
  
-    reviewed_result = await LLM_Exchange.mistral(
-        user_project_struct, 
-        Instructions.project_struct,
-        nearests_prompts
-    )
+    if languague == 'py':
+        reviewed_result = await LLM_Exchange.mistral(
+            user_project_struct, 
+            Instructions.project_struct_py,
+            nearests_prompts
+        )
+    elif languague == 'ts':
+        reviewed_result = await LLM_Exchange.mistral(
+            user_project_struct, 
+            Instructions.file_struct_ts,
+            nearests_prompts
+        )
+    else:
+        print("Error type")
+        return {'error': 'no such type'}
     
     return reviewed_result
     
 
 async def code_review_file(file: UploadFile, languague: Language):
-    user_project_struct = await file.project_struct()
+    user_project_struct = await file.file.read()
 
     nearests_prompts = FAISS_Exchange.Extract_Similar_Codes.file(
         user_project_struct, 
         10
     )
-    
-    reviewed_result = await LLM_Exchange.mistral(
-        user_project_struct, 
-        Instructions.project_struct,
-        nearests_prompts
-    )
+
+    if languague == 'py':
+        reviewed_result = await LLM_Exchange.mistral(
+            user_project_struct, 
+            Instructions.file_struct_py,
+            nearests_prompts
+        )
+    elif languague == 'ts':
+        reviewed_result = await LLM_Exchange.mistral(
+            user_project_struct, 
+            Instructions.file_struct_ts,
+            nearests_prompts
+        )
+    else:
+        return {'error': 'no such type'}
     
     return reviewed_result
 

@@ -4,10 +4,11 @@ from fastapi import HTTPException
 import httpx 
 from backend.app.adapters.llm.params import LLM_Params
 from data.consts.instruct import Instructions
+from data.consts.languague import Language
 
 class LLM_Exchange:
 
-    async def mistral(file: str, file_type: Instructions, top_similarity_framgents: str, headers = {}, http_addr = ''):
+    async def mistral(file: str, instruction: Instructions, top_similarity_framgents: str, headers = {}, http_addr = '', is_this_project = True):
         if headers == {}:
             headers = LLM_Params.headers
         
@@ -23,7 +24,7 @@ class LLM_Exchange:
                     response = await client.post(
                     http_addr, 
                     headers=headers, 
-                    json=LLM_Params.body(file, file_type, top_similarity_framgents),
+                    json=LLM_Params.body(file, instruction, top_similarity_framgents, is_this_project),
                 )
                 break  # Exit the loop if the request was successful
             except Exception as e:  # Log the exception if needed

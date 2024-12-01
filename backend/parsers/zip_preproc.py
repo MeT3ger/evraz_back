@@ -1,6 +1,7 @@
 from zipfile import ZipFile
 import json
 import pprint
+import asyncio
 
 #Класс для работы с запакованным архивом
 #Атрибуты класса:
@@ -16,13 +17,19 @@ class ZipPreproc:
         self.filename = filename    #Имя файла
         self.archieve = ZipFile(filename) #Архив
         self.filelist = []  #Список всез файлов
+        self.filelist_len = []
         self.Dict_path = {}
+        self.root = ''
 
         for item in self.archieve.infolist():    #Создание списка со всеми файлами, кроме тех, что находятся в директории 'MACOSX'
             fname = item.filename
 
             if fname[-1] != '/' and not('MACOSX' in fname):
                 self.filelist.append(list(fname.split('/')))
+                self.filelist_len.append(len(list(fname.split('/'))))
+    
+        if min(self.filelist_len) >= 2:
+            self.root = self.filelist[0][0]
 
     #Функция для полного заполнения словаря
     async def fill_dict(self):
@@ -46,7 +53,7 @@ class ZipPreproc:
     #   filelist - список, содержащий имена файлов
     #Вывод:
     #   множество всевозможных расширений
-    async def __find_file_types(self):
+    async def find_file_types(self):
 
         if self.Dict_path == {}:
             await self.fill_dict()
@@ -76,6 +83,19 @@ class ZipPreproc:
             #dict_arc[list_path[indx]] = ''
             return dict_arc
 
+    async def get_files(self):
+        pathes = []
+
+        for item in self.archieve.infolist():    #Создание списка со всеми файлами, кроме тех, что находятся в директории 'MACOSX'
+            fname = item.filename
+
+            if fname[-1] != '/' and not('MACOSX' in fname):
+                if self.root != '':
+                    fname = fname.replace(self.root + '/', '')
+                pathes.append(fname)
+        return '\n'.join(pathes)
+
+
     #Функция создания файла json непосредственно из архива zip
     #   filename - имя архива
     #   jsonname - имя json, в который будет сохраняться инфорация (если существует, то старая информация на нем будет стерта). По умолчанию 'PreprocData.json'
@@ -94,3 +114,8 @@ class ZipPreproc:
 
     def __del__(self):
         self.archieve.close()
+
+if __name__ == '__main__':
+    pth = r'data\python\2020.2-Anunbis-develop.zip'
+    zp = ZipPreproc(pth)
+    print(asyncio.run(zp.get_files()))

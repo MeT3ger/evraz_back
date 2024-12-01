@@ -35,10 +35,7 @@ async def zip_code_review(type: Language = Header(), file: UploadFile = File(ali
 async def zip_code_review(type: Language = Header(), file: UploadFile = File(alias="some")):
     file_income = file.file.read()
 
-    # if file.filename.endswith('.py'):
-    #     answer = python_review(file_income)
-    # elif file.filename.endswith('.cs'):
-    #     answer = csharp_review(file_income)
+    mistral_answer = code_review_file(file_income, file.filename[-2:])
     # elif file.filename.endswith('.ts'):
     #     answer = typescript_review(file_income)clear
 
