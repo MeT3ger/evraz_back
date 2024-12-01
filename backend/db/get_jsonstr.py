@@ -1,9 +1,9 @@
 from backend.db.file_library import FileLibrary, Files
 import json
 
-class GetDataBase:
+class Database:
 
-    def get_db():
+    def get():
         jsons = ''
         
         for file in Files:

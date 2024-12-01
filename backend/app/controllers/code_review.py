@@ -1,26 +1,26 @@
 from fastapi import UploadFile
 from backend.app.adapters.llm.exchange import LLM_Exchange
-from backend.app.adapters.faiss.exchange import FAISS_Exchange
 
-from backend.extensions.ZipFile import ZipFile
+from backend.extensions.zip_file import ZipFile
 from data.consts.instruct import Instructions
 from data.consts.languague import Language
 
 async def code_review_zip(zip: ZipFile, languague: Language):
     user_project_struct = await zip.project_struct()
     
-    nearests_prompts = ""
-    
-    if (languague == Language.python):
-        nearests_prompts = await FAISS_Exchange.Extract_Similar_Codes.project(
-            user_project_struct, 
-            10
-        )
+    instructions = ""
+    if languague == Language.python:
+        instructions = Instructions.project_struct_py
+    elif languague == Language.csharp:
+        instructions = Instructions.project_struct_cs
+    elif languague == Language.typescript:
+        instructions = Instructions.project_struct_ts
  
     reviewed_result = await LLM_Exchange.mistral(
         user_project_struct, 
-        Instructions.project_struct,
-        nearests_prompts
+        instructions,
+        "",
+        is_this_project=True
     )
     
     return reviewed_result
@@ -28,18 +28,20 @@ async def code_review_zip(zip: ZipFile, languague: Language):
 
 async def code_review_file(file: UploadFile, languague: Language):
     user_project_struct = file.file.read()
-
-    nearests_prompts = ""
-    if (languague == Language.python):
-        nearests_prompts = FAISS_Exchange.Extract_Similar_Codes.file(
-            user_project_struct, 
-            10
-        )
+    
+    instructions = ""
+    if languague == Language.python:
+        instructions = Instructions.file_struct_py
+    elif languague == Language.csharp:
+        instructions = Instructions.file_struct_cs
+    elif languague == Language.typescript:
+        instructions = Instructions.file_struct_ts
     
     reviewed_result = await LLM_Exchange.mistral(
         user_project_struct, 
-        Instructions.file_struct,
-        nearests_prompts
+        instructions,
+        "",
+        is_this_project=False
     )
     
     return reviewed_result
