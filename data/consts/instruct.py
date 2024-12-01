@@ -752,3 +752,171 @@ class Instructions():
         useFunction(myObject.bestMethod) // опасно, this.anotherMethod() выдаст ошибку,
         // либо никогда не выплонится
     '''
+
+    file_struct_cs = '''
+        Руководство по код-ревью–Обзор
+
+        Содержимое
+        • Проверяем соответствие регламентам
+        • На что обращаем внимание
+        • Частые ошибки
+        • Общие
+        • Архитектура и дизайн методов
+        • LINQ
+        • Entity Framework
+
+        Проверяем соответствие регламентам
+        1. Обязательные решения при разработке
+        Для всех проектов
+        OpenShift
+        WPF
+        2. Руководство по стилю csharp
+
+        На что обращаем внимание
+        Проект
+        Nuget пакеты, по возможности, должны быть обновлены до последних версий и не иметь
+        уязвимостей
+        Если транзитивный Nuget пакет имеет уязвимость, значит он должен быть включен в проект
+        и обновлен до актуальной версии
+        Проект не должен иметь лишних зависимостей или зависимостей, ссылающихся на
+        локальные файлы (для таких зависимостей прописан абсолютный путь)
+        Код
+        В коде не должно быть неразрешенных TODO
+        Не должно быть закомментированного или неиспользуемого кода
+        Код с атрибутом Obsolete , по возможности, должен быть удален
+        Обязательное наличие комментариев для моделей, сущностей и т.д.
+        Стоит обращать внимание на неиспользуемые переменные или неиспользуемый возврат из
+        методов
+
+        Частые ошибки
+        Общие
+        Дублирование сообщения, при логировании исключения
+
+        Log.Error(ex, ex.Message);
+        Log.Error(ex, "");
+
+        // Сообщение будет задублировано
+        // Без дублирования
+
+        Объединение строк с помощью оператора + , вместо Литералы необработанных строк
+        await _context.Database.ExecuteSqlRawAsync("select * from uzdt.addfactorywagon("
+        + "@p_wagonid, "
+        + "@p_tracksectionid, "
+        + "@p_netweight, "
+        + "@p_grossweight; ");
+
+        Использование прямых вычислений, вместо методов конвертации
+        int netWeight = factoryWagon?.NetWeight / 1000;
+
+        Лишняя проверка на null , для арифметический операций
+        return (tons.HasValue) ? tons.Value * 1000 : null;
+
+        Архитектура и дизайн методов
+        Неправильная регистрация сервисов в IoC контейнере, когда HostedService должен быть доступен
+        как Singleton
+        // Неправильно
+        services.AddScoped<IMnemonicStationService, MnemonicStationService>();
+        services.AddSingleton<IHostedService, MnemonicStationService>();
+        // Правильно
+        services.AddSingleton<IMnemonicStationService, MnemonicStationService>();
+        services.AddHostedService(provider => provider.GetRequiredService<IMnemonicStationService>());
+
+        Возврат null , вместо пустой коллекции
+        public IList<string>? GetHeaders()
+
+        Возврат коллекции, c null элементами
+        public IList<string?> GetHeaders()
+
+        Проверку передаваемых аргументов стоит выполнять в методе, а не в вызове метода
+        UserEntity user = await _userRepository.GetUserByIdAsync(
+        command.UserId ?? throw new InvalidOperationException("Message")
+        )
+
+        Если возврат null из метода, является исключением, то исключение нужно кидать в методе, а не
+        в клиентском коде
+
+        FunctionCapabilityEntity functionCapability = await _functionCapabilityRepository.GetByIdAsync(command.Syst
+        ?? throw new InvalidOperationException("Message");
+
+        Использование внутри метода интерфейса коллекции, вместо реализации
+        IList<int> list = new List<int>();
+
+        LINQ
+        Использование Skip().Take() , вместо Chunk()
+        while (i < fMPCompany.CompanyTab.Length)
+        {
+        FMPCompanyItemDto[] items = fMPCompany.CompanyTab
+        .Skip(i)
+        .Take(SapErpLoadConsts.BatchSize)
+        .ToArray();
+        // ...
+        i += SapErpLoadConsts.BatchSize;
+        }
+
+        Использование методов Union() , Except() , Intersect() , Distinct() , SequenceEqual() ,
+        при работе с пользовательским типом данных,
+        для которого не переопределены методы Equals() и GetHashCode() или не реализован интерфейс
+        IEquatable<T>
+
+        return ordersToro
+        .Union(ordersCo)
+        .ToArray();
+
+        Использование Distinct() , после Union()
+        long[] totalFunctionCapabilities = functionCapabilitiesRoles
+        .Select(x => x.FunctionCapabilityId)
+        .Union(functionCapabilitiesUser.Select(x => x.FunctionCapabilityId))
+        .Distinct()
+        .ToArray();
+
+        Лишний ToArray() или ToList()
+        EmployeesListItem[] employees = await GetEmployeesListAsync(usersByFio, positionsByTableNames, cancellation
+        return new EmployeesListMessage { EmployeesList = employees.ToArray() };
+
+        // Лишний ToArray()
+
+        foreach(FactoryItemResponse factoryDto in dto.Where(t=> factoryNums.Contains(t.Number)).ToList())
+        {
+        factoryDto.CompanyId = balanceEntity.Id;
+        }
+
+        // Лиш
+
+        Entity Framework
+
+        Использование синхронных методов материализации, вместо асинхронных
+        Удаление сущностей в цикле
+        foreach (WagonMarkingPrescription item in markingForRemove)
+        {
+        _context.WagonMarkingPrescriptions.Remove(item);
+        }
+
+        Лишняя материализация при удалении элементов
+        List<WagonMoveHistory> removingTrackMovementHistory = await _context.WagonMoveHistory
+        .Where(z => z.TrackSectionId == trackSectionId)
+        .ToListAsync();
+        // Лишний ToListAsync()
+        _context.WagonMoveHistory.RemoveRange(removingTrackMovementHistory);
+
+        Вызов SaveChangesAsync() после каждого действия
+        IQueryable<InvoiceOutFactoryWagon> wagons = _context.InvoiceOutFactoryWagons.Where(a => a.InvoiceOutId == i
+        _context.InvoiceOutFactoryWagons.RemoveRange(wagons);
+        await _context.SaveChangesAsync();
+        // Лишний SaveChangesAsync()
+        _context.InvoiceOuts.Remove(invoice);
+        await _context.SaveChangesAsync();
+
+        Выполнение фильтрации на стороне приложения, а не БД
+        FactoryEntity[] allFactories = await _appDbContext.Set<FactoryEntity>()
+        .AsNoTracking()
+        .Include(x => x.BalanceUnitEntity)
+        .ToArrayAsync(cancellationToken);
+        return allFactories
+        .Where(x => identificators.Any(y => y == x.Number))
+        .ToArray();
+
+        Использование AddAsync() и AddRangeAsync() , вместо Add и AddRange() , если не используется
+        SqlServerValueGenerationStrategy.SequenceHiLo
+
+        await _context.InvoiceOutDocuments.AddAsync(invoice);
+    '''
